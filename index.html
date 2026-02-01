@@ -81,13 +81,14 @@
             transform: translate(-50%, -50%);
             background: #fff;
             padding: 25px;
+            padding-bottom: 60px; /* Увеличен нижний отступ для удобной прокрутки на планшетах */
             border-radius: 30px;
             text-align: center;
             box-shadow: 0 25px 70px rgba(0,0,0,0.5);
             z-index: 200;
             width: 88%;
             max-width: 450px;
-            max-height: 95vh;
+            max-height: 90vh; /* Немного уменьшил макс. высоту для лучшего контроля прокрутки */
             overflow-y: auto;
         }
 
@@ -370,6 +371,7 @@
         function updateColorComplex(player) {
             const h = document.getElementById(`hue${player}`).value;
             const l = document.getElementById(`light${player}`).value;
+            // Используем HSL для удобного получения любого оттенка, включая черный и белый
             const color = `hsl(${h}, 100%, ${l}%)`;
             
             const dummy = document.createElement('div');

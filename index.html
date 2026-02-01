@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Две Яркие Половины</title>
+    <title>Два цвета</title>
     <style>
         :root {
             --p1-color: #FF007A; /* Розовый по умолчанию */
@@ -19,7 +19,7 @@
             background-color: #111;
         }
 
-        /* Game Container */
+        /* Контейнер игры */
         #game-container {
             display: flex;
             width: 100vw;
@@ -54,80 +54,119 @@
         #player1 { background-color: var(--p1-color); width: 50%; }
         #player2 { background-color: var(--p2-color); width: 50%; }
 
-        /* Small Exit Button */
+        /* Кнопка выхода */
         #exit-btn {
             display: none;
             position: absolute;
             top: 15px;
             right: 15px;
-            width: 35px;
-            height: 35px;
-            background: rgba(0, 0, 0, 0.3);
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.4);
             color: white;
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 8px;
-            font-size: 24px;
-            line-height: 30px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            font-size: 28px;
+            line-height: 38px;
             text-align: center;
             cursor: pointer;
             z-index: 100;
-            opacity: 0.6;
         }
-        #exit-btn:hover { opacity: 1; background: rgba(0, 0, 0, 0.6); }
 
-        /* Settings UI */
+        /* Интерфейс настроек */
         #settings-overlay {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 1);
+            background: #fff;
             padding: 25px;
-            border-radius: 28px;
+            border-radius: 30px;
             text-align: center;
-            box-shadow: 0 25px 70px rgba(0,0,0,0.7);
+            box-shadow: 0 25px 70px rgba(0,0,0,0.5);
             z-index: 200;
-            width: 85%;
-            max-width: 480px;
+            width: 88%;
+            max-width: 450px;
             max-height: 95vh;
             overflow-y: auto;
         }
 
         .config-section {
             display: flex;
-            gap: 12px;
+            gap: 15px;
             margin-bottom: 15px;
         }
 
         .player-config {
             flex: 1;
-            background: #f8f8f8;
-            padding: 10px;
-            border-radius: 18px;
+            background: #fdfdfd;
+            padding: 12px;
+            border-radius: 20px;
             border: 1px solid #eee;
         }
 
         .player-config input[type="text"] {
             width: 100%;
-            border: 1px solid #ddd;
-            padding: 8px;
-            border-radius: 8px;
-            margin-bottom: 10px;
+            border: 2px solid #eee;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 12px;
             box-sizing: border-box;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-align: center;
         }
 
-        /* UI для выбора цвета на мобильных устройствах */
-        .color-selector-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        /* Выбор цвета */
+        .spectrum-label {
+            font-size: 0.7rem;
+            color: #888;
+            margin-bottom: 4px;
+            display: block;
+            text-align: left;
         }
 
+        .hue-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 18px;
+            border-radius: 10px;
+            background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+            outline: none;
+            cursor: pointer;
+            margin-bottom: 8px;
+        }
+
+        /* Ползунок яркости для получения черного, серого и белого */
+        .lightness-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 18px;
+            border-radius: 10px;
+            background: linear-gradient(to right, #000, #888, #fff);
+            outline: none;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .hue-slider::-webkit-slider-thumb, .lightness-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #fff;
+            border: 3px solid #333;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Сетка пресетов */
         .color-presets {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 6px;
+            margin-bottom: 10px;
         }
 
         .color-dot {
@@ -135,73 +174,60 @@
             aspect-ratio: 1/1;
             border-radius: 8px;
             cursor: pointer;
-            border: 3px solid white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: transform 0.1s;
-            box-sizing: border-box;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: 0.1s;
         }
-        .color-dot:active { transform: scale(0.9); }
-        .color-dot.active { border-color: #333; box-shadow: 0 0 0 1px #333; }
+        .color-dot.active { border-color: #000; transform: scale(1.05); }
 
-        .custom-color-container {
-            position: relative;
-            height: 36px;
-            width: 100%;
-            margin-top: 4px;
-            overflow: hidden;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            background: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .custom-color-container span {
-            font-size: 0.75rem;
-            color: #666;
-            pointer-events: none;
-        }
-
-        input[type="color"] {
-            position: absolute;
-            top: -5px;
-            left: -5px;
-            width: 120%;
-            height: 120%;
-            border: none;
-            cursor: pointer;
-            background: none;
-            padding: 0;
-            opacity: 0.01; /* Скрываем стандартный вид, оставляя функционал */
-        }
-
-        .input-group {
-            margin: 15px 0;
+        /* Кастомный красивый ползунок кликов */
+        .range-container {
+            margin: 20px 0;
             text-align: left;
             padding: 0 10px;
         }
 
-        /* Toggle Switch */
+        .styled-range {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            outline: none;
+            margin: 15px 0;
+        }
+
+        .styled-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 28px;
+            height: 28px;
+            background: #000;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 4px solid #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: transform 0.1s;
+        }
+        .styled-range::-webkit-slider-thumb:active { transform: scale(1.2); }
+
         .toggle-group {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 15px;
-            background: #f0f0f0;
-            padding: 10px 15px;
-            border-radius: 12px;
+            background: #f5f5f5;
+            padding: 12px 18px;
+            border-radius: 15px;
         }
 
         .switch {
             position: relative;
             display: inline-block;
-            width: 44px;
-            height: 22px;
+            width: 50px;
+            height: 26px;
         }
-
         .switch input { opacity: 0; width: 0; height: 0; }
-
         .slider-round {
             position: absolute;
             cursor: pointer;
@@ -210,125 +236,109 @@
             transition: .4s;
             border-radius: 34px;
         }
-
         .slider-round:before {
             position: absolute;
             content: "";
-            height: 16px; width: 16px;
-            left: 3px; bottom: 3px;
+            height: 18px; width: 18px;
+            left: 4px; bottom: 4px;
             background-color: white;
             transition: .4s;
             border-radius: 50%;
         }
-
         input:checked + .slider-round { background-color: #4CAF50; }
-        input:checked + .slider-round:before { transform: translateX(22px); }
+        input:checked + .slider-round:before { transform: translateX(24px); }
 
-        input[type="range"] {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 10px;
-            background: #ddd;
-            border-radius: 10px;
-            margin: 10px 0;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 28px; height: 28px;
-            background: #000;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .btn-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
+        /* Кнопки */
+        .btn-container { display: flex; flex-direction: column; gap: 12px; }
         button.main-btn {
             background: #000;
             color: white;
             border: none;
-            padding: 14px;
-            border-radius: 12px;
-            font-size: 1.1rem;
+            padding: 16px;
+            border-radius: 15px;
+            font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
-            width: 100%;
+            transition: transform 0.1s;
         }
-
+        button.main-btn:active { transform: scale(0.98); }
         button.secondary-btn {
-            background: #eee;
+            background: #f0f0f0;
             color: #333;
             border: none;
-            padding: 10px;
-            border-radius: 10px;
+            padding: 12px;
+            border-radius: 12px;
             font-size: 0.9rem;
             cursor: pointer;
         }
 
-        /* Victory */
+        /* Экран победы */
         #victory-screen {
             display: none;
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
             color: white;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 300;
+            transition: background-color 0.5s ease;
+        }
+
+        #winner-text {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            font-weight: 900;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            padding: 0 20px;
         }
     </style>
 </head>
 <body>
 
-    <button id="exit-btn" title="Выйти в меню" onclick="resetGame()">×</button>
+    <button id="exit-btn" onclick="resetGame()">×</button>
 
     <div id="settings-overlay">
-        <h2 style="margin-top:0; font-size: 1.6rem;">Настройки битвы</h2>
+        <h2 style="margin-top:0; color: #111;">Настройки Битвы</h2>
         
         <div class="config-section">
+            <!-- Игрок 1 -->
             <div class="player-config">
-                <input type="text" id="name1" placeholder="Имя 1" value="Игрок 1">
-                <div class="color-selector-wrapper">
-                    <div class="color-presets" id="presets1"></div>
-                    <div class="custom-color-container">
-                        <span>Свой цвет 1</span>
-                        <input type="color" id="color1" value="#FF007A" oninput="updateLivePreview(1, this.value)">
-                    </div>
-                </div>
+                <input type="text" id="name1" placeholder="Игрок 1" value="Игрок 1">
+                <span class="spectrum-label">Тон и Яркость:</span>
+                <input type="range" min="0" max="360" value="331" class="hue-slider" id="hue1" oninput="updateColorComplex(1)">
+                <input type="range" min="0" max="100" value="50" class="lightness-slider" id="light1" oninput="updateColorComplex(1)">
+                <div class="color-presets" id="presets1"></div>
             </div>
+            <!-- Игрок 2 -->
             <div class="player-config">
-                <input type="text" id="name2" placeholder="Имя 2" value="Игрок 2">
-                <div class="color-selector-wrapper">
-                    <div class="color-presets" id="presets2"></div>
-                    <div class="custom-color-container">
-                        <span>Свой цвет 2</span>
-                        <input type="color" id="color2" value="#00E5FF" oninput="updateLivePreview(2, this.value)">
-                    </div>
-                </div>
+                <input type="text" id="name2" placeholder="Игрок 2" value="Игрок 2">
+                <span class="spectrum-label">Тон и Яркость:</span>
+                <input type="range" min="0" max="360" value="187" class="hue-slider" id="hue2" oninput="updateColorComplex(2)">
+                <input type="range" min="0" max="100" value="50" class="lightness-slider" id="light2" oninput="updateColorComplex(2)">
+                <div class="color-presets" id="presets2"></div>
             </div>
         </div>
 
         <div class="toggle-group">
-            <span style="font-weight: 600; color: #444; font-size: 0.9rem;">Показывать имена</span>
+            <span style="font-weight: bold; color: #444;">Имена на экране</span>
             <label class="switch">
                 <input type="checkbox" id="show-names-toggle" checked onchange="toggleLabelsPreview()">
                 <span class="slider-round"></span>
             </label>
         </div>
 
-        <div class="input-group">
-            <label style="font-weight: bold; color: #555; font-size: 0.9rem;">Нажатий для победы: <span id="clicks-val">20</span></label>
-            <input type="range" id="power-slider" min="2" max="200" value="20">
+        <div class="range-container">
+            <label style="font-weight: bold; color: #555;">Сила клика: <span id="clicks-val">20</span></label>
+            <input type="range" id="power-slider" min="2" max="200" value="20" class="styled-range">
         </div>
 
         <div class="btn-container">
             <button class="main-btn" onclick="startGame()">ИГРАТЬ</button>
-            <button class="secondary-btn" id="fullscreen-btn" onclick="toggleFullscreen()">Развернуть на весь экран</button>
+            <button class="secondary-btn" id="fullscreen-btn" onclick="toggleFullscreen()">На весь экран</button>
         </div>
     </div>
 
@@ -343,20 +353,34 @@
 
     <div id="victory-screen">
         <h1 id="winner-text">ПОБЕДА!</h1>
-        <button class="main-btn" style="width: auto; padding: 15px 50px;" onclick="resetGame()">В МЕНЮ</button>
+        <button class="main-btn" style="background: white; color: black; padding: 15px 60px;" onclick="resetGame()">В МЕНЮ</button>
     </div>
 
     <script>
-        const brightColors = ['#FF0000', '#FFEB3B', '#4CAF50', '#00E5FF', '#9C27B0', '#FF007A', '#0000FF', '#FF9800'];
+        const brightColors = ['#FF0000', '#FFEB3B', '#4CAF50', '#00E5FF', '#9C27B0', '#FF007A', '#0000FF', '#FFFFFF', '#888888', '#000000'];
         const slider = document.getElementById('power-slider');
         const clicksDisplay = document.getElementById('clicks-val');
-        let p1Width = 50, shiftPower = 2.5, gameActive = false;
+        
+        let p1Color = '#FF007A';
+        let p2Color = '#00E5FF';
+        let p1Width = 50;
+        let shiftPower = 2.5;
+        let gameActive = false;
 
-        function updateLivePreview(player, color) {
-            document.documentElement.style.setProperty(`--p${player}-color`, color);
-            // При выборе через пипетку убираем выделение с пресетов
-            const container = document.getElementById(`presets${player}`);
-            container.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+        function updateColorComplex(player) {
+            const h = document.getElementById(`hue${player}`).value;
+            const l = document.getElementById(`light${player}`).value;
+            const color = `hsl(${h}, 100%, ${l}%)`;
+            
+            const dummy = document.createElement('div');
+            dummy.style.color = color;
+            document.body.appendChild(dummy);
+            const rgb = window.getComputedStyle(dummy).color;
+            document.body.removeChild(dummy);
+            
+            if (player === 1) p1Color = rgb; else p2Color = rgb;
+            document.documentElement.style.setProperty(`--p${player}-color`, rgb);
+            document.getElementById(`presets${player}`).querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
         }
 
         function toggleLabelsPreview() {
@@ -368,20 +392,15 @@
         function setupPresets() {
             [1, 2].forEach(num => {
                 const container = document.getElementById(`presets${num}`);
-                const picker = document.getElementById(`color${num}`);
                 brightColors.forEach(color => {
                     const dot = document.createElement('div');
                     dot.className = 'color-dot';
                     dot.style.backgroundColor = color;
+                    if ((num === 1 && color === '#FF007A') || (num === 2 && color === '#00E5FF')) dot.classList.add('active');
                     
-                    // Помечаем активным цвет по умолчанию
-                    if ((num === 1 && color === '#FF007A') || (num === 2 && color === '#00E5FF')) {
-                        dot.classList.add('active');
-                    }
-
                     dot.onclick = () => { 
-                        picker.value = color; 
-                        updateLivePreview(num, color);
+                        if (num === 1) p1Color = color; else p2Color = color;
+                        document.documentElement.style.setProperty(`--p${num}-color`, color);
                         container.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
                         dot.classList.add('active');
                     };
@@ -392,28 +411,22 @@
 
         function toggleFullscreen() {
             if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => {
-                    console.log(`Ошибка: ${err.message}`);
-                });
-                document.getElementById('fullscreen-btn').innerText = "Выйти из полноэкранного режима";
+                document.documentElement.requestFullscreen().catch(() => {});
+                document.getElementById('fullscreen-btn').innerText = "Выйти из режима";
             } else {
                 document.exitFullscreen();
-                document.getElementById('fullscreen-btn').innerText = "Развернуть на весь экран";
+                document.getElementById('fullscreen-btn').innerText = "На весь экран";
             }
         }
 
         slider.addEventListener('input', (e) => { clicksDisplay.innerText = e.target.value; });
 
         function startGame() {
-            const name1 = document.getElementById('name1').value || "Игрок 1";
-            const name2 = document.getElementById('name2').value || "Игрок 2";
-            const clicks = parseInt(slider.value) || 20;
-            
-            document.getElementById('label1').innerText = name1;
-            document.getElementById('label2').innerText = name2;
+            document.getElementById('label1').innerText = document.getElementById('name1').value || "Игрок 1";
+            document.getElementById('label2').innerText = document.getElementById('name2').value || "Игрок 2";
             toggleLabelsPreview();
 
-            shiftPower = 50 / clicks;
+            shiftPower = 50 / (parseInt(slider.value) || 20);
             p1Width = 50;
             updateLayout();
 
@@ -436,15 +449,44 @@
         }
 
         function checkWin() {
-            if (p1Width >= 100) endGame(document.getElementById('name1').value + " ВЫИГРАЛ!");
-            if (p1Width <= 0) endGame(document.getElementById('name2').value + " ВЫИГРАЛ!");
+            if (p1Width >= 100) endGame(1);
+            if (p1Width <= 0) endGame(2);
         }
 
-        function endGame(text) {
+        function endGame(playerNum) {
             gameActive = false;
+            const winnerName = document.getElementById(`name${playerNum}`).value || `Игрок ${playerNum}`;
+            const winnerColor = playerNum === 1 ? p1Color : p2Color;
+            
+            const screen = document.getElementById('victory-screen');
+            screen.style.backgroundColor = winnerColor;
+            
+            // Расчет контрастности текста
+            const contrast = getContrastYIQ(rgbToHex(winnerColor));
+            screen.style.color = contrast;
+            
+            document.getElementById('winner-text').innerText = `${winnerName} ВЫИГРАЛ!`;
             document.getElementById('exit-btn').style.display = 'none';
-            document.getElementById('winner-text').innerText = text;
-            document.getElementById('victory-screen').style.display = 'flex';
+            screen.style.display = 'flex';
+        }
+
+        function getContrastYIQ(hexcolor){
+            hexcolor = hexcolor.replace("#", "");
+            if (hexcolor.length === 3) hexcolor = hexcolor.split('').map(c => c + c).join('');
+            const r = parseInt(hexcolor.substr(0,2),16);
+            const g = parseInt(hexcolor.substr(2,2),16);
+            const b = parseInt(hexcolor.substr(4,2),16);
+            const yiq = ((r*299)+(g*587)+(b*114))/1000;
+            return (yiq >= 128) ? 'black' : 'white';
+        }
+
+        function rgbToHex(rgb) {
+            if (rgb.startsWith('#')) return rgb;
+            const parts = rgb.match(/\d+/g);
+            return "#" + parts.map(x => {
+                const hex = parseInt(x).toString(16);
+                return hex.length === 1 ? "0" + hex : hex;
+            }).join("");
         }
 
         function resetGame() {
@@ -454,25 +496,13 @@
             document.getElementById('victory-screen').style.display = 'none';
             document.getElementById('exit-btn').style.display = 'none';
             document.getElementById('settings-overlay').style.display = 'block';
-            if (document.fullscreenElement) {
-                document.exitFullscreen().catch(() => {});
-                document.getElementById('fullscreen-btn').innerText = "Развернуть на весь экран";
-            }
         }
 
-        window.addEventListener('popstate', function(event) {
-            if (gameActive) {
-                resetGame();
-            }
-        });
-
-        // Touch events
         const touchHandler = (p) => (e) => { if(e.cancelable) e.preventDefault(); handlePress(p); };
         document.getElementById('player1').addEventListener('touchstart', touchHandler(1), {passive: false});
         document.getElementById('player2').addEventListener('touchstart', touchHandler(2), {passive: false});
 
         setupPresets();
-        toggleLabelsPreview();
     </script>
 </body>
 </html>
